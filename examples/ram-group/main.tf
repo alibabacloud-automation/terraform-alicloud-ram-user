@@ -1,5 +1,5 @@
-module "ram-group-with-policies" {
-  source = "../../modules/ram-group-with-policies"
+module "ram-group" {
+  source = "../../modules/ram-group"
 
   ################################
   # RAM group

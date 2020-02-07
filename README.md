@@ -119,7 +119,7 @@ module "ram_policy" {
 ```
 
 ## Modules
-* [ram-group-with-policies module](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group-with-policies)
+* [ram-group module](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group)
 
 
 ## Examples

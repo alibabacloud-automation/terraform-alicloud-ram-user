@@ -116,7 +116,7 @@ module "ram_policy" {
 
 ## 模块
 
-* [ram-group-with-policies 模块](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group-with-policies)
+* [ram-group 模块](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group)
 
 
 ## 示例
