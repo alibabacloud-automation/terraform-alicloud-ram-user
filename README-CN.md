@@ -1,13 +1,9 @@
-Terraform module which create RAM users on Alibaba Cloud.  
-terraform-alicloud-ram-user
+terraform-alicloud-ram-user 
+===========================
 
-=====================================================================
+Terraform模块用于在阿里云上创建RAM用户，同时您可以选择是否创建该用户的`login_profile`和`access_key`并为该用户绑定`policy`。本模块还支持创建RAM组及将用户添加到RAM组中，并为RAM组绑定`policy`等。
 
-English | [简体中文](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/blob/master/README-CN.md)
-
-Terraform module is used to create a RAM user on Alibaba Cloud, while you can choose whether to create the user's `login_profile` and `access_key` and bind `policy` to this user. This module also supports creating RAM group, adding users to RAM group, and binding `policy` to RAM group.
-
-These types of resources are supported:
+支持以下类型的资源：
 
 * [RAM user](https://www.terraform.io/docs/providers/alicloud/r/ram_user.html)
 * [RAM group](https://www.terraform.io/docs/providers/alicloud/r/ram_group.html)
@@ -17,15 +13,15 @@ These types of resources are supported:
 * [RAM user policy attachment](https://www.terraform.io/docs/providers/alicloud/r/ram_user_policy_attachment.html)
 * [RAM group policy attachment](https://www.terraform.io/docs/providers/alicloud/r/ram_group_policy_attachment.html)
 
-## Terraform versions
+## Terraform 版本
 
-The Module requires Terraform 0.12 and Terraform Provider AliCloud 1.56.0+.
+本 Module 要求使用 Terraform 0.12 和 阿里云 Provider 1.56.0+。
 
-## Usage
+## 用法
 
-### create a new ram user
+### 创建一个新的RAM用户
 
-Create a ram user without any access permission.
+创建没有任何访问权限的ram用户。
 
 ```hcl
 module "ram-user" {
@@ -33,7 +29,7 @@ module "ram-user" {
   name   = "test-user"
 }
 ```
-Setting `create_ram_user_login_profile` to true can allow the ram user login the web console.
+将create_ram_user_login_profile设置为true可以允许ram用户登录Web控制台。
 
 ```hcl
 module "ram_user" {
@@ -45,8 +41,7 @@ module "ram_user" {
  }
 ```
 
-Setting `create_ram_access_key` to true can allocate a access key and secret key to the ram user
-, and them will store into the default secret file `secret.txt`.
+将create_ram_access_key设置为true可以为ram用户分配访问密钥和秘密密钥，它们将存储到默认的秘密文件"secret.txt"中。
 
 ```hcl
 module "ram_user" {
@@ -57,14 +52,14 @@ module "ram_user" {
  }
 ```
 
-Create a RAM user with `login profile`, `access key` and `policies`.
+创建一个完整的RAM用户。
 
 ```hcl
 module "ram-user" {
   source = "terraform-alicloud-modules/ram-user/alicloud"
 
   ################################
-  # RAM user
+  # 创建RAM用户
   ################################
   user_name    = "test-user"
   mobile       = "86-18688888888"
@@ -72,28 +67,28 @@ module "ram-user" {
   comments     = "this is a test user"
   
   ################################
-  # RAM login profile/RAM access key
+  # 创建RAM用户的 login profile和 access key
   ################################
   create_ram_access_key         = true
   password                      = "Yourpassword_1234"
   create_ram_user_login_profile = true
   
   ################################
-  # RAM user policy attachment
+  # 为RAM用户绑定系统或自定义策略
   ################################
   create_user_attachment = true
   policies = [
-    # Binding a system policy.
+    # 绑定系统策略
     {
       policy_names = join(",", ["AliyunVPCFullAccess", "AliyunKafkaFullAccess"])
       policy_type  = "System"
     },
-    # When binding custom policy, make sure this policy has been created.
+    # 绑定自定义策略
     {
       policy_names = "VpcListTagResources,RamPolicyForZhouqilin"
       policy_type  = "Custom"
     },
-    # Create policy and bind the ram user.
+    # 绑定自定义策略
     {
       policy_names = join(",", module.ram_policy.this_policy_name)
     }
@@ -119,25 +114,26 @@ module "ram_policy" {
 }
 ```
 
-## Modules
-* [ram-group-with-policies module](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group-with-policies)
+## 模块
+
+* [ram-group-with-policies 模块](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group-with-policies)
 
 
-## Examples
+## 示例
 
-* [complete example](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete)
-* [ram-group example](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group)
+* [ram-user 完整示例](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete)
+* [ram-group 示例](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group)
 
 
-Authors
+作者
 -------
-Created and maintained by Zhou qilin(z17810666992@163.com), He Guimin(@xiaozhu36, heguimin36@163.com).
+Created and maintained by Zhou qilin(z17810666992@163.com), He Guimin(@xiaozhu36, heguimin36@163.com)
 
-License
+许可
 ----
 Apache 2 Licensed. See LICENSE for full details.
 
-Reference
+参考
 ---------
 * [Terraform-Provider-Alicloud Github](https://github.com/terraform-providers/terraform-provider-alicloud)
 * [Terraform-Provider-Alicloud Release](https://releases.hashicorp.com/terraform-provider-alicloud/)
