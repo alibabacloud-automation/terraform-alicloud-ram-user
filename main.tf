@@ -8,6 +8,7 @@ provider "alicloud" {
 
 resource "random_uuid" "this" {}
 
+/*
 locals {
   create         = var.existing_user_name != "" ? false : var.create
   create_profile = var.existing_user_name != "" || var.create ? true : false
@@ -26,17 +27,22 @@ locals {
   this_user_name = var.existing_user_name != "" ? var.existing_user_name : concat(alicloud_ram_user.this.*.name, [""])[0]
 
 }
+*/
 
 ################################
 # RAM user
 ################################
+
 resource "alicloud_ram_user" "this" {
-  count        = local.create ? 1 : 0
-  name         = local.user_name
-  display_name = var.display_name != "" ? var.display_name : null
-  mobile       = var.mobile != "" ? var.mobile : null
-  email        = var.email != "" ? var.email : null
-  comments     = var.comments != "" ? var.comments : null
+  for_each = {
+    for user in var.users : "${user.name}" => user
+  }
+
+  name         = each.value.name != "" ? each.value.name : substr("ram-user-${replace(random_uuid.this.result, "-", "")}", 0, 32)
+  display_name = each.value.display_name != "" ? each.value.display_name : null
+  mobile       = each.value.mobile != "" ? each.value.mobile : null
+  email        = each.value.email != "" ? each.value.email : null
+  comments     = each.value.comments != "" ? each.value.comments : null
   force        = var.force_destroy_user
 }
 
@@ -44,23 +50,31 @@ resource "alicloud_ram_user" "this" {
 # RAM login profile
 ################################
 resource "alicloud_ram_login_profile" "this" {
-  count = local.create_profile && var.create_ram_user_login_profile ? 1 : 0
 
-  user_name               = local.this_user_name
-  password                = var.password
-  password_reset_required = var.password_reset_required
-  mfa_bind_required       = var.mfa_bind_required
+  for_each = {
+    for login_profile in var.login_profiles : "${login_profile.user_name}" => login_profile
+  }
+
+  user_name               = each.value.user_name
+  password                = each.value.password
+  password_reset_required = each.value.password_reset_required
+  mfa_bind_required       = each.value.mfa_bind_required
 }
 
 ################################
 # RAM access key
 ################################
 resource "alicloud_ram_access_key" "this" {
-  count = local.create_profile && var.create_ram_access_key ? 1 : 0
-
-  user_name   = local.this_user_name
-  secret_file = var.secret_file
+  for_each =  toset(var.access_keys)
+  user_name   = each.value
+  secret_file = "${each.value}.key"
 }
+
+
+
+/*
+
+
 
 ################################
 # RAM user policy attachment
@@ -73,3 +87,4 @@ resource "alicloud_ram_user_policy_attachment" "this" {
   policy_type = lookup(local.policy_list[count.index], "policy_type")
 }
 
+*/
