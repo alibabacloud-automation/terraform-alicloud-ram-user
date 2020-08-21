@@ -1,32 +1,25 @@
 
 output "users_id" {
-  description = "Map of vswitch ids"
+  description = "The users created"
   value       = [for value in alicloud_ram_user.this : value]
 }
 
 output "access_keys" {
-  description = "Map of vswitch ids"
+  description = "The access keys created"
   value       = [for value in alicloud_ram_access_key.this : value]
 }
 
 output "secret_keys" {
-  description = "Map of vswitch ids"
-  value       = [for value in alicloud_ram_access_key.this : file(value.secret_file)]
+  description = "The secret keys created"
+  value       = [for value in fileset(path.cwd, "*.key") : file(value)]
 }
 
-/*
-output "this_user_name" {
-  description = "The name of RAM user"
-  value       = alicloud_ram_user.this.*.name
+output "user_system_policy_attachments" {
+  description = "The System policies attached to the users"
+  value       = [for value in alicloud_ram_user_policy_attachment.system_policies : value]
 }
 
-output "this_ram_user_unique_id" {
-  description = "The unique ID assigned by alicloud"
-  value       = alicloud_ram_user.this.*.id
+output "user_custom_policy_attachments" {
+  description = "The Custom policies attached to the users"
+  value       = [for value in alicloud_ram_user_policy_attachment.custom_policies : value]
 }
-
-output "this_user_policy_name" {
-  description = "The name of RAM policy which bind to RAM user"
-  value       = alicloud_ram_user_policy_attachment.this.*.policy_name
-}
-*/

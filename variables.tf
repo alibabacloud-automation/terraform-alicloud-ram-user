@@ -51,7 +51,6 @@ variable "login_profiles" {
   default     = []
 }
 
-
 ################################
 # RAM access key
 ################################
@@ -62,20 +61,18 @@ variable "access_keys" {
   default     = []
 }
 
-/*
-
 ################################
 # RAM user policy attachment
 ################################
-variable "create_user_attachment" {
-  description = "Whether to attach RAM policy to RAM user. Default value is 'false'."
-  type        = bool
-  default     = false
-}
 
-variable "policies" {
-  description = "List of the policies that binds the role. Each item can contains keys: 'policy_name'(the name of policy that used to bind the role), 'policy_type'(the type of ram policies, System or Custom, default to Custom.)."
-  type        = list(map(string))
+variable "system_policies" {
+  description = "List of the System policies that binds the role."
+  type        = list(string)
   default     = []
 }
-*/
+
+variable "custom_policies" {
+  description = "List of the Custom policies that binds the role."
+  type        = list(string)
+  default     = []
+}
