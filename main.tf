@@ -18,14 +18,14 @@ locals {
 
   system_policies_binding = [
     for v in setproduct(var.system_policies, [for value in alicloud_ram_user.this : value.name]) : {
-      ram_policy = v[0]
+      ram_policy   = v[0]
       ram_username = v[1]
     }
   ]
 
   custom_policies_binding = [
     for v in setproduct(var.custom_policies, [for value in alicloud_ram_user.this : value.name]) : {
-      ram_policy = v[0]
+      ram_policy   = v[0]
       ram_username = v[1]
     }
   ]
@@ -87,17 +87,17 @@ resource "alicloud_ram_user_policy_attachment" "system_policies" {
   policy_name = each.value.ram_policy
   policy_type = "System"
   user_name   = each.value.ram_username
-  
+
 }
 
 resource "alicloud_ram_user_policy_attachment" "custom_policies" {
 
   for_each = {
     for binding in local.custom_policies_binding : "${binding.ram_policy}-${binding.ram_username}" => binding
-  } 
+  }
 
   policy_name = each.value.ram_policy
   policy_type = "Custom"
   user_name   = each.value.ram_username
-  
+
 }
