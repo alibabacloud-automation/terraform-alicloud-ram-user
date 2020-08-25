@@ -78,7 +78,7 @@ resource "alicloud_ram_access_key" "this" {
 ################################
 # RAM user policy attachment
 ################################
-resource "alicloud_ram_user_policy_attachment" "system_policies" {
+resource "alicloud_ram_user_policy_attachment" "system" {
 
   for_each = {
     for binding in local.system_policies_binding : "${binding.ram_policy}-${binding.ram_username}" => binding
@@ -90,7 +90,7 @@ resource "alicloud_ram_user_policy_attachment" "system_policies" {
 
 }
 
-resource "alicloud_ram_user_policy_attachment" "custom_policies" {
+resource "alicloud_ram_user_policy_attachment" "custom" {
 
   for_each = {
     for binding in local.custom_policies_binding : "${binding.ram_policy}-${binding.ram_username}" => binding
