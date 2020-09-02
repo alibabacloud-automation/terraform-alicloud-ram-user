@@ -24,46 +24,11 @@ variable "skip_region_validation" {
 ################################
 # RAM user
 ################################
-variable "create" {
-  description = "Whether to create ram user."
-  type        = bool
-  default     = true
-}
 
-variable "existing_user_name" {
-  description = "The name of an existing RAM group. If set, 'create' will be ignored."
-  type        = string
-  default     = ""
-}
-
-variable "user_name" {
-  description = "Desired name for the ram user. If not set, a default name with prefix 'ram-user-' will be returned."
-  type        = string
-  default     = ""
-}
-
-variable "display_name" {
-  description = "Name of the RAM user which for display"
-  type        = string
-  default     = ""
-}
-
-variable "mobile" {
-  description = "Phone number of the RAM user. This number must contain an international area code prefix, just look like this: 86-18600008888."
-  type        = string
-  default     = ""
-}
-
-variable "email" {
-  description = "Email of the RAM user."
-  type        = string
-  default     = ""
-}
-
-variable "comments" {
-  description = "Comment of the RAM user. This parameter can have a string of 1 to 128 characters."
-  type        = string
-  default     = ""
+variable "users" {
+  description = "Create RAM users"
+  type        = list(object({ name = string, display_name = string, mobile = string, email = string, comments = string }))
+  default     = []
 }
 
 variable "force_destroy_user" {
@@ -75,56 +40,39 @@ variable "force_destroy_user" {
 ################################
 # RAM login profile
 ################################
-variable "create_ram_user_login_profile" {
-  description = "Whether to create ram user login profile"
-  type        = bool
-  default     = false
-}
+# TODO evaluate an improvement to add a submodule for RAM login profiles in case there is the preference to have default values
+# password => The Console password to access
+# password_reset_required => This parameter indicates whether the password needs to be reset when the user first logs in. Default value is 'false'
+# mfa_bind_required => This parameter indicates whether the MFA needs to be bind when the user first logs in. Default value is 'false'.
 
-variable "password" {
-  description = "Login password of the user"
-  type        = string
-  default     = ""
-}
-
-variable "password_reset_required" {
-  description = "This parameter indicates whether the password needs to be reset when the user first logs in. Default value is 'false'."
-  type        = bool
-  default     = false
-}
-
-variable "mfa_bind_required" {
-  description = "This parameter indicates whether the MFA needs to be bind when the user first logs in. Default value is 'false'."
-  type        = bool
-  default     = false
+variable "login_profiles" {
+  description = "Create login profiles for the RAM users"
+  type        = list(object({ user_name = string, password = string, password_reset_required = bool, mfa_bind_required = bool }))
+  default     = []
 }
 
 ################################
 # RAM access key
 ################################
-variable "create_ram_access_key" {
-  description = "Whether to create ram access key. Default value is 'false'."
-  type        = bool
-  default     = false
-}
 
-variable "secret_file" {
-  description = "A file used to store access key and secret key of ther user."
-  type        = string
-  default     = "secret.pem"
+variable "access_keys" {
+  description = "Create access keys for the RAM users"
+  type        = list(string)
+  default     = []
 }
 
 ################################
 # RAM user policy attachment
 ################################
-variable "create_user_attachment" {
-  description = "Whether to attach RAM policy to RAM user. Default value is 'false'."
-  type        = bool
-  default     = false
+
+variable "system_policies" {
+  description = "List of the System policies that binds the role."
+  type        = list(string)
+  default     = []
 }
 
-variable "policies" {
-  description = "List of the policies that binds the role. Each item can contains keys: 'policy_name'(the name of policy that used to bind the role), 'policy_type'(the type of ram policies, System or Custom, default to Custom.)."
-  type        = list(map(string))
+variable "custom_policies" {
+  description = "List of the Custom policies that binds the role."
+  type        = list(string)
   default     = []
 }

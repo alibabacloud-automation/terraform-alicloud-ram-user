@@ -4,22 +4,45 @@ module "ram-user" {
   ################################
   # RAM user
   ################################
-  user_name = "test-user"
-  mobile    = "86-18688888888"
-  email     = "13366668888@163.com"
-  comments  = "this is a test user"
+  users = [{
+      name         = "test-user-1",
+      display_name = "Test User 1",
+      mobile       = null,
+      email        = null,
+      comments     = null
+    },
+    {
+      name         = "test-user-2",
+      display_name = "Test User 2",
+      mobile       = null,
+      email        = null,
+      comments     = "A service account"
+    }
+  ]
 
   ################################
   # RAM login profile/RAM access key
   ################################
-  create_ram_access_key         = true
-  password                      = "Yourpassword_1234"
-  create_ram_user_login_profile = true
+  login_profiles = [{
+    user_name               = "test-user-1",
+    password                = "QWEsasa!676",
+    password_reset_required = false,
+    mfa_bind_required       = false
+    }
+  ]
+
+  access_keys = ["test-user-1"]
 
   ################################
   # RAM user policy attachment
   ################################
-  create_user_attachment = true
+ 
+  system_policies = [
+    "AdministratorAccess"
+  ]
+
+  custom_policies = ["manage-slb-and-eip-resource"]
+
   policies = [
     # Binding a system policy.
     {

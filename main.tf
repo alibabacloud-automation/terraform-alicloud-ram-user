@@ -9,34 +9,45 @@ provider "alicloud" {
 resource "random_uuid" "this" {}
 
 locals {
-  create         = var.existing_user_name != "" ? false : var.create
-  create_profile = var.existing_user_name != "" || var.create ? true : false
-  attach_policy  = var.existing_user_name != "" || var.create ? true : false
-  user_name      = var.user_name != "" ? var.user_name : substr("ram-user-${replace(random_uuid.this.result, "-", "")}", 0, 32)
-  policy_list = flatten(
-    [
-      for _, obj in var.policies : [
-        for _, name in distinct(flatten(split(",", obj["policy_names"]))) : {
-          policy_name = name
-          policy_type = lookup(obj, "policy_type", "Custom")
-        }
-      ]
-    ]
-  )
-  this_user_name = var.existing_user_name != "" ? var.existing_user_name : concat(alicloud_ram_user.this.*.name, [""])[0]
+
+  /*
+  * Alibaba alicloud_ram_user_policy_attachment supports only one value for "user_name", we need to build a cartesian product to associate each
+  * managed policy to each user.
+  * The alicloud_ram_user_policy_attachment does a distinction between System and Custom policies
+  */
+
+  system_policies_binding = [
+    for v in setproduct(var.system_policies, [for value in alicloud_ram_user.this : value.name]) : {
+      ram_policy   = v[0]
+      ram_username = v[1]
+    }
+  ]
+
+  custom_policies_binding = [
+    for v in setproduct(var.custom_policies, [for value in alicloud_ram_user.this : value.name]) : {
+      ram_policy   = v[0]
+      ram_username = v[1]
+    }
+  ]
+
 
 }
+
 
 ################################
 # RAM user
 ################################
+
 resource "alicloud_ram_user" "this" {
-  count        = local.create ? 1 : 0
-  name         = local.user_name
-  display_name = var.display_name != "" ? var.display_name : null
-  mobile       = var.mobile != "" ? var.mobile : null
-  email        = var.email != "" ? var.email : null
-  comments     = var.comments != "" ? var.comments : null
+  for_each = {
+    for user in var.users : "${user.name}" => user
+  }
+
+  name         = each.value.name != "" ? each.value.name : substr("ram-user-${replace(random_uuid.this.result, "-", "")}", 0, 32)
+  display_name = each.value.display_name != "" ? each.value.display_name : null
+  mobile       = each.value.mobile != "" ? each.value.mobile : null
+  email        = each.value.email != "" ? each.value.email : null
+  comments     = each.value.comments != "" ? each.value.comments : null
   force        = var.force_destroy_user
 }
 
@@ -44,32 +55,49 @@ resource "alicloud_ram_user" "this" {
 # RAM login profile
 ################################
 resource "alicloud_ram_login_profile" "this" {
-  count = local.create_profile && var.create_ram_user_login_profile ? 1 : 0
 
-  user_name               = local.this_user_name
-  password                = var.password
-  password_reset_required = var.password_reset_required
-  mfa_bind_required       = var.mfa_bind_required
+  for_each = {
+    for login_profile in var.login_profiles : "${login_profile.user_name}" => login_profile
+  }
+
+  user_name               = each.value.user_name
+  password                = each.value.password
+  password_reset_required = each.value.password_reset_required
+  mfa_bind_required       = each.value.mfa_bind_required
 }
 
 ################################
 # RAM access key
 ################################
 resource "alicloud_ram_access_key" "this" {
-  count = local.create_profile && var.create_ram_access_key ? 1 : 0
-
-  user_name   = local.this_user_name
-  secret_file = var.secret_file
+  for_each    = toset(var.access_keys)
+  user_name   = each.value
+  secret_file = "${each.value}.key"
 }
 
 ################################
 # RAM user policy attachment
 ################################
-resource "alicloud_ram_user_policy_attachment" "this" {
-  count = local.attach_policy ? length(local.policy_list) : 0
+resource "alicloud_ram_user_policy_attachment" "system" {
 
-  user_name   = local.this_user_name
-  policy_name = lookup(local.policy_list[count.index], "policy_name")
-  policy_type = lookup(local.policy_list[count.index], "policy_type")
+  for_each = {
+    for binding in local.system_policies_binding : "${binding.ram_policy}-${binding.ram_username}" => binding
+  }
+
+  policy_name = each.value.ram_policy
+  policy_type = "System"
+  user_name   = each.value.ram_username
+
 }
 
+resource "alicloud_ram_user_policy_attachment" "custom" {
+
+  for_each = {
+    for binding in local.custom_policies_binding : "${binding.ram_policy}-${binding.ram_username}" => binding
+  }
+
+  policy_name = each.value.ram_policy
+  policy_type = "Custom"
+  user_name   = each.value.ram_username
+
+}
