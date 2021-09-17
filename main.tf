@@ -64,4 +64,3 @@ resource "alicloud_ram_user_policy_attachment" "this" {
   policy_name = lookup(local.policy_list[count.index], "policy_name")
   policy_type = lookup(local.policy_list[count.index], "policy_type")
 }
-

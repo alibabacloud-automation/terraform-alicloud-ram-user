@@ -111,7 +111,7 @@ variable "create_ram_access_key" {
 variable "secret_file" {
   description = "A file used to store access key and secret key of ther user."
   type        = string
-  default     = "secret.pem"
+  default     = ""
 }
 
 ################################
