@@ -16,10 +16,6 @@ These types of resources are supported:
 * [RAM user policy attachment](https://www.terraform.io/docs/providers/alicloud/r/ram_user_policy_attachment.html)
 * [RAM group policy attachment](https://www.terraform.io/docs/providers/alicloud/r/ram_group_policy_attachment.html)
 
-## Terraform versions
-
-The Module requires Terraform 0.12 and Terraform Provider AliCloud 1.56.0+.
-
 ## Usage
 
 ### create a new ram user
@@ -127,10 +123,74 @@ module "ram_policy" {
 * [complete example](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete)
 * [ram-group example](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group)
 
+## Notes
+From the version v1.1.0, the module has removed the following `provider` setting:
+
+```hcl
+provider "alicloud" {
+  profile                 = var.profile != "" ? var.profile : null
+  shared_credentials_file = var.shared_credentials_file != "" ? var.shared_credentials_file : null
+  region                  = var.region != "" ? var.region : null
+  skip_region_validation  = var.skip_region_validation
+  configuration_source    = "terraform-alicloud-modules/ram-user"
+}
+```
+
+If you still want to use the `provider` setting to apply this module, you can specify a supported version, like 1.0.0:
+
+```hcl
+module "ram_user" {
+  source                        = "terraform-alicloud-modules/ram-user/alicloud"
+  version                       = "1.0.0"
+  region                        = "cn-beijing"
+  profile                       = "Your-Profile-Name"
+  name                          = "test-user"
+  create_ram_user_login_profile = true
+  // ...
+}
+```
+
+If you want to upgrade the module to 1.1.0 or higher in-place, you can define a provider which same region with
+previous region:
+
+```hcl
+provider "alicloud" {
+  region  = "cn-beijing"
+  profile = "Your-Profile-Name"
+}
+module "ram_user" {
+  source                        = "terraform-alicloud-modules/ram-user/alicloud"
+  name                          = "test-user"
+  create_ram_user_login_profile = true
+  // ...
+}
+```
+or specify an alias provider with a defined region to the module using `providers`:
+
+```hcl
+provider "alicloud" {
+  region  = "cn-beijing"
+  profile = "Your-Profile-Name"
+  alias   = "bj"
+}
+module "ram_user" {
+  source  = "terraform-alicloud-modules/ram-user/alicloud"
+  providers = {
+    alicloud = alicloud.bj
+  }
+  name   = "test-user"
+  create_ram_user_login_profile = true
+  // ...
+}
+```
+
+and then run `terraform init` and `terraform apply` to make the defined provider effect to the existing module state.
+
+More details see [How to use provider in the module](https://www.terraform.io/docs/language/modules/develop/providers.html#passing-providers-explicitly)
 
 Authors
 -------
-Created and maintained by Zhou qilin(z17810666992@163.com), He Guimin(@xiaozhu36, heguimin36@163.com).
+Created and maintained by Alibaba Cloud Terraform Team(terraform@alibabacloud.com)
 
 License
 ----
