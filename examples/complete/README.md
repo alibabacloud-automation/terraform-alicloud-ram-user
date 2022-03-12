@@ -1,8 +1,8 @@
-# RAM user example
+# Complete
 
 Configuration in this directory creates RAM user with specified password, a pair of access key and access secret, which will be stored in './secret.txt'. This user can be attached with ram policies.
 
-# Usage
+## Usage
 
 To run this example you need to execute:
 
@@ -12,15 +12,21 @@ $ terraform plan
 $ terraform apply
 ```
 
-Run `terraform destroy` when you don't need these resources.
+Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
+
+This example provides the tf variables file in the folder `tfvars`. If you want to create or update this example,
+you can run this example as the following commands:
+```bash
+$ terraform plan -var-file=tfvars/01-update.tfvars
+$ terraform apply -var-file=tfvars/01-update.tfvars
+```
+
+Also, you can add more variables files in the folder `tfvars`.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
 
-## Outputs
-| Name | Description |
-|------|-------------|
-| this_ram_user_name | The user's name |
-| this_ram_user_unique_id | The unique ID assigned by Alibaba Cloud |
-| this_user_policy_name | The name of RAM policy which bind to RAM user |
-
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
+| <a name="requirement_alicloud"></a> [alicloud](#requirement\_alicloud) | >= 1.56.0 |

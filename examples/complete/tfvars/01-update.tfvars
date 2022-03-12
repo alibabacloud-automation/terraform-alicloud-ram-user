@@ -1,16 +1,15 @@
 ################################
 # RAM user
 ################################
-user_name = "test-user-update-015"
-mobile    = "86-18688888889"
-email     = "13366668880@163.com"
-comments  = "this is a test user update"
-user_display_name = "user_display_name_update"
+display_name       = "update-tf-testacc-display-name"
+mobile             = "86-18888888888"
+email              = "168@163.com"
+comments           = "update-tf-testacc-comments"
 force_destroy_user = true
+
 ################################
-# RAM login profile/RAM access key
+# RAM login profile
 ################################
-password                      = "Yourpassword_1234_update"
-password_reset_required       = true
-mfa_bind_required             = true
-secret_file                   = "secret1.pem"
+password                = "YourPassword123!update"
+password_reset_required = true
+mfa_bind_required       = true

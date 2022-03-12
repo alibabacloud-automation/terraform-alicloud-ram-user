@@ -1,4 +1,5 @@
-resource "random_uuid" "this" {}
+resource "random_uuid" "this" {
+}
 
 locals {
   create         = var.existing_user_name != "" ? false : var.create
@@ -16,7 +17,6 @@ locals {
     ]
   )
   this_user_name = var.existing_user_name != "" ? var.existing_user_name : concat(alicloud_ram_user.this.*.name, [""])[0]
-
 }
 
 ################################
@@ -36,7 +36,7 @@ resource "alicloud_ram_user" "this" {
 # RAM login profile
 ################################
 resource "alicloud_ram_login_profile" "this" {
-  count = local.create_profile && var.create_ram_user_login_profile ? 1 : 0
+  count = var.create_ram_user_login_profile ? 1 : 0
 
   user_name               = local.this_user_name
   password                = var.password
@@ -48,7 +48,7 @@ resource "alicloud_ram_login_profile" "this" {
 # RAM access key
 ################################
 resource "alicloud_ram_access_key" "this" {
-  count = local.create_profile && var.create_ram_access_key ? 1 : 0
+  count = var.create_ram_access_key ? 1 : 0
 
   user_name   = local.this_user_name
   secret_file = var.secret_file
@@ -58,7 +58,7 @@ resource "alicloud_ram_access_key" "this" {
 # RAM user policy attachment
 ################################
 resource "alicloud_ram_user_policy_attachment" "this" {
-  count = local.attach_policy ? length(local.policy_list) : 0
+  count = var.create_user_attachment ? length(local.policy_list) : 0
 
   user_name   = local.this_user_name
   policy_name = lookup(local.policy_list[count.index], "policy_name")

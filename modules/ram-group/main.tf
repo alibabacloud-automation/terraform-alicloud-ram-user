@@ -1,12 +1,5 @@
-provider "alicloud" {
-  profile                 = var.profile != "" ? var.profile : null
-  shared_credentials_file = var.shared_credentials_file != "" ? var.shared_credentials_file : null
-  region                  = var.region != "" ? var.region : null
-  skip_region_validation  = var.skip_region_validation
-  configuration_source    = "terraform-alicloud-modules/ram-user/ram-group"
+resource "random_uuid" "this" {
 }
-
-resource "random_uuid" "this" {}
 
 locals {
   create        = var.existing_group_name != "" ? false : var.create
@@ -23,7 +16,6 @@ locals {
     ]
   )
   this_group_name = var.existing_group_name != "" ? var.existing_group_name : concat(alicloud_ram_group.this.*.name, [""])[0]
-
 }
 
 ################################

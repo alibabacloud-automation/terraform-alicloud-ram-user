@@ -10,5 +10,5 @@ output "this_ram_user_unique_id" {
 
 output "this_user_policy_name" {
   description = "The name of RAM policy which bind to RAM user"
-  value       = concat( alicloud_ram_user_policy_attachment.this.*.policy_name, [""])[0]
+  value       = concat(alicloud_ram_user_policy_attachment.this.*.policy_name, [""])[0]
 }
