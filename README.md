@@ -23,21 +23,21 @@ These types of resources are supported:
 Create a ram user without any access permission.
 
 ```hcl
-module "ram-user" {
-  source = "terraform-alicloud-modules/ram-user/alicloud"
-  name   = "test-user"
+module "ram_user" {
+  source    = "terraform-alicloud-modules/ram-user/alicloud"
+  user_name = "test-user"
 }
 ```
 Setting `create_ram_user_login_profile` to true can allow the ram user login the web console.
 
 ```hcl
 module "ram_user" {
-   source = "terraform-alicloud-modules/ram-user/alicloud"
+  source = "terraform-alicloud-modules/ram-user/alicloud"
 
-   name                          = "test-user"
-   create_ram_user_login_profile = true
-   password                      = "Yourpassword_1234"
- }
+  user_name                     = "test-user"
+  create_ram_user_login_profile = true
+  password                      = "Yourpassword_1234"
+}
 ```
 
 Setting `create_ram_access_key` to true can allocate a access key and secret key to the ram user
@@ -45,21 +45,21 @@ Setting `create_ram_access_key` to true can allocate a access key and secret key
 
 ```hcl
 module "ram_user" {
-   source                = "terraform-alicloud-modules/ram-user/alicloud"
+  source = "terraform-alicloud-modules/ram-user/alicloud"
 
-   name                  = "test-user"
-   create_ram_access_key = true
- }
+  user_name             = "test-user"
+  create_ram_access_key = true
+}
 ```
 
 Create a RAM user with `login profile`, `access key` and `policies`.
 
 ```hcl
-module "ram-user" {
+module "ram_user" {
   source = "terraform-alicloud-modules/ram-user/alicloud"
 
   ################################
-  # RAM user
+  # 创建RAM用户
   ################################
   user_name    = "test-user"
   mobile       = "86-18688888888"
@@ -67,30 +67,30 @@ module "ram-user" {
   comments     = "this is a test user"
   
   ################################
-  # RAM login profile/RAM access key
+  # 创建RAM用户的 login profile和 access key
   ################################
   create_ram_access_key         = true
   password                      = "Yourpassword_1234"
   create_ram_user_login_profile = true
   
   ################################
-  # RAM user policy attachment
+  # 为RAM用户绑定系统或自定义策略
   ################################
   create_user_attachment = true
   policies = [
-    # Binding a system policy.
+    # 绑定系统策略
     {
       policy_names = join(",", ["AliyunVPCFullAccess", "AliyunKafkaFullAccess"])
       policy_type  = "System"
     },
-    # When binding custom policy, make sure this policy has been created.
+    # 绑定自定义策略
     {
       policy_names = "VpcListTagResources,RamPolicyForZhouqilin"
       policy_type  = "Custom"
     },
-    # Create policy and bind the ram user.
+    # 绑定自定义策略
     {
-      policy_names = join(",", module.ram_policy.this_policy_name)
+      policy_names = join(",", ["manage-slb-and-eip-resource", "manage-ecs-vpc-and-vswitch-resource"])
     }
   ]
 }
@@ -106,6 +106,7 @@ module "ram_policy" {
     {
       #actions is the action of custom specific resource.
       #resources is the specific object authorized to customize.
+      name      = "manage-ecs-vpc-and-vswitch-resource"
       actions   = join(",", ["ecs:ModifyInstanceAttribute", "vpc:ModifyVpc", "vswitch:ModifyVSwitch"])
       resources = join(",", ["acs:ecs:*:*:instance/i-001", "acs:vpc:*:*:vpc/v-001", "acs:vpc:*:*:vswitch/vsw-001"])
       effect    = "Deny"

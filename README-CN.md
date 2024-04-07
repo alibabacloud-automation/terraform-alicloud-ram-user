@@ -20,38 +20,38 @@ Terraform模块用于在阿里云上创建RAM用户，同时您可以选择是�
 创建没有任何访问权限的ram用户。
 
 ```hcl
-module "ram-user" {
-  source = "terraform-alicloud-modules/ram-user/alicloud"
-  name   = "test-user"
+module "ram_user" {
+  source    = "terraform-alicloud-modules/ram-user/alicloud"
+  user_name = "test-user"
 }
 ```
 将create_ram_user_login_profile设置为true可以允许ram用户登录Web控制台。
 
 ```hcl
 module "ram_user" {
-   source = "terraform-alicloud-modules/ram-user/alicloud"
+  source = "terraform-alicloud-modules/ram-user/alicloud"
 
-   name                          = "test-user"
-   create_ram_user_login_profile = true
-   password                      = "Yourpassword_1234"
- }
+  user_name                     = "test-user"
+  create_ram_user_login_profile = true
+  password                      = "Yourpassword_1234"
+}
 ```
 
 将create_ram_access_key设置为true可以为ram用户分配访问密钥和秘密密钥，它们将存储到默认的秘密文件"secret.txt"中。
 
 ```hcl
 module "ram_user" {
-   source                = "terraform-alicloud-modules/ram-user/alicloud"
+  source = "terraform-alicloud-modules/ram-user/alicloud"
 
-   name                  = "test-user"
-   create_ram_access_key = true
- }
+  user_name             = "test-user"
+  create_ram_access_key = true
+}
 ```
 
 创建一个完整的RAM用户。
 
 ```hcl
-module "ram-user" {
+module "ram_user" {
   source = "terraform-alicloud-modules/ram-user/alicloud"
 
   ################################
@@ -86,7 +86,7 @@ module "ram-user" {
     },
     # 绑定自定义策略
     {
-      policy_names = join(",", module.ram_policy.this_policy_name)
+      policy_names = join(",", ["manage-slb-and-eip-resource", "manage-ecs-vpc-and-vswitch-resource"])
     }
   ]
 }
@@ -102,6 +102,7 @@ module "ram_policy" {
     {
       #actions is the action of custom specific resource.
       #resources is the specific object authorized to customize.
+      name      = "manage-ecs-vpc-and-vswitch-resource"
       actions   = join(",", ["ecs:ModifyInstanceAttribute", "vpc:ModifyVpc", "vswitch:ModifyVSwitch"])
       resources = join(",", ["acs:ecs:*:*:instance/i-001", "acs:vpc:*:*:vpc/v-001", "acs:vpc:*:*:vswitch/vsw-001"])
       effect    = "Deny"

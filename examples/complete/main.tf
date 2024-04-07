@@ -1,3 +1,7 @@
+variable "policy_name" {
+  default = "tf-example-policy"
+}
+
 module "ram_user" {
   source = "../.."
 
@@ -82,10 +86,12 @@ module "ram_user_policy_attachment" {
   existing_user_name = module.ram_user.this_user_name
   policies = [
     {
-      policy_names = module.ram_policy.this_policy_name[0]
+      policy_names = var.policy_name
       policy_type  = "Custom"
     }
   ]
+
+  depends_on = [ module.ram_policy ]
 
 }
 
@@ -123,18 +129,19 @@ module "ram_group_policy_attachment" {
   existing_group_name = module.ram_group.this_group_name[0]
   policies = [
     {
-      policy_names = module.ram_policy.this_policy_name[0]
+      policy_names = var.policy_name
       policy_type  = "Custom"
     }
   ]
 
+  depends_on = [ module.ram_policy ]
 }
 
 module "ram_policy" {
   source = "terraform-alicloud-modules/ram-policy/alicloud"
   policies = [
     {
-      name            = "tf-testacc-policy-2022"
+      name            = var.policy_name
       defined_actions = join(",", ["slb-all", "vpc-all", "vswitch-all"])
       actions         = join(",", ["vpc:AssociateEipAddress", "vpc:UnassociateEipAddress"])
       resources       = join(",", ["acs:vpc:*:*:eip/eip-12345", "acs:slb:*:*:*"])

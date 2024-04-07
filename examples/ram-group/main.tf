@@ -1,3 +1,8 @@
+resource "alicloud_ram_user" "default" {
+  count = 2
+  name  = "user-${count.index + 1}"
+}
+
 module "ram-group" {
   source = "../../modules/ram-group"
 
@@ -11,7 +16,7 @@ module "ram-group" {
   # RAM group membership
   ################################
   # before joining the RAM group, make sure the RAM user has been created.
-  user_names = ["user1", "user2"]
+  user_names = alicloud_ram_user.default.*.name
 
   ################################
   # RAM group policy attachements
@@ -25,14 +30,15 @@ module "ram-group" {
     },
     # When binding custom policy, make sure this policy has been created.
     {
-      policy_names = "VpcListTagResources,RamPolicyForZhangsan"
+      policy_names = "VpcListTagResources"
       policy_type  = "Custom"
     },
     # Create policy and bind the ram group.
     {
-      policy_names = join(",", module.ram_policy.this_policy_name)
+      policy_names = join(",", ["manage-slb-and-eip-resource", "manage-ecs-vpc-and-vswitch-resource"])
     }
   ]
+  depends_on = [module.ram_policy]
 }
 
 module "ram_policy" {
@@ -47,6 +53,7 @@ module "ram_policy" {
     {
       #actions is the action of custom specific resource.
       #resources is the specific object authorized to customize.
+      name      = "manage-ecs-vpc-and-vswitch-resource"
       actions   = join(",", ["ecs:ModifyInstanceAttribute", "vpc:ModifyVpc", "vswitch:ModifyVSwitch"])
       resources = join(",", ["acs:ecs:*:*:instance/i-001", "acs:vpc:*:*:vpc/v-001", "acs:vpc:*:*:vswitch/vsw-001"])
       effect    = "Deny"
