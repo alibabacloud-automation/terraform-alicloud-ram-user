@@ -1,5 +1,22 @@
-variable "policy_name" {
-  default = "tf-example-policy"
+locals {
+  resource_name_prefix = "tfmod-ram-user-complete"
+  policy_name = "${local.resource_name_prefix}-custom-policy-1"
+}
+
+resource "alicloud_ram_policy" "custom-policy-1" {
+  policy_name     = local.policy_name
+  policy_document = <<EOF
+	{
+		"Version": "1",
+		"Statement": [
+		  {
+			"Action": "ecs:*",
+			"Resource": "*",
+			"Effect": "Allow"
+		  }
+		]
+	  }
+	EOF
 }
 
 module "ram_user" {
@@ -8,7 +25,7 @@ module "ram_user" {
   # RAM user
   create = true
 
-  user_name          = "tf-testacc-user-2022"
+  user_name          = "${local.resource_name_prefix}-user-2022"
   display_name       = var.display_name
   mobile             = var.mobile
   email              = var.email
@@ -35,7 +52,7 @@ module "ram_login_profile" {
   # RAM login profile
   create_ram_user_login_profile = true
 
-  existing_user_name      = module.ram_user.this_user_name
+  existing_user_name      = module.ram_user.user_name
   password                = var.password
   password_reset_required = var.password_reset_required
   mfa_bind_required       = var.mfa_bind_required
@@ -60,7 +77,7 @@ module "ram_access_key" {
   # RAM access key
   create_ram_access_key = true
 
-  existing_user_name = module.ram_user.this_user_name
+  existing_user_name = module.ram_user.user_name
   secret_file        = "secret.txt"
 
   # RAM user policy attachment
@@ -83,16 +100,13 @@ module "ram_user_policy_attachment" {
   # RAM user policy attachment
   create_user_attachment = true
 
-  existing_user_name = module.ram_user.this_user_name
+  existing_user_name = module.ram_user.user_name
   policies = [
     {
-      policy_names = var.policy_name
+      policy_names = local.policy_name
       policy_type  = "Custom"
     }
   ]
-
-  depends_on = [ module.ram_policy ]
-
 }
 
 module "ram_group" {
@@ -101,7 +115,7 @@ module "ram_group" {
   # RAM group
   create = true
 
-  group_name          = "tf-testacc-group"
+  group_name          = "${local.resource_name_prefix}-group"
   comments            = var.comments
   force_destroy_group = var.force_destroy_user
 
@@ -114,8 +128,8 @@ module "ram_group_membership" {
   create = false
 
   # RAM group membership
-  existing_group_name = module.ram_group.this_group_name[0]
-  user_names          = [module.ram_user.this_user_name]
+  existing_group_name = module.ram_group.group_name
+  user_names          = [module.ram_user.user_name]
 
 }
 
@@ -126,30 +140,11 @@ module "ram_group_policy_attachment" {
   create = false
 
   # RAM group policy attachements
-  existing_group_name = module.ram_group.this_group_name[0]
+  existing_group_name = module.ram_group.group_name
   policies = [
     {
-      policy_names = var.policy_name
+      policy_names = local.policy_name
       policy_type  = "Custom"
-    }
-  ]
-
-  depends_on = [ module.ram_policy ]
-}
-
-module "ram_policy" {
-  source = "terraform-alicloud-modules/ram-policy/alicloud"
-  policies = [
-    {
-      name            = var.policy_name
-      defined_actions = join(",", ["slb-all", "vpc-all", "vswitch-all"])
-      actions         = join(",", ["vpc:AssociateEipAddress", "vpc:UnassociateEipAddress"])
-      resources       = join(",", ["acs:vpc:*:*:eip/eip-12345", "acs:slb:*:*:*"])
-    },
-    {
-      actions   = join(",", ["ecs:ModifyInstanceAttribute", "vpc:ModifyVpc", "vswitch:ModifyVSwitch"])
-      resources = join(",", ["acs:ecs:*:*:instance/i-001", "acs:vpc:*:*:vpc/v-001", "acs:vpc:*:*:vswitch/vsw-001"])
-      effect    = "Deny"
     }
   ]
 }

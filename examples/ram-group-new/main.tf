@@ -1,5 +1,5 @@
 locals {
-  resource_name_prefix = "tfmod-ram-user-ram-group"
+  resource_name_prefix = "tfmod-ram-user-ram-group-new"
 }
 
 resource "alicloud_ram_user" "default" {
@@ -74,23 +74,13 @@ module "example" {
   ################################
   # RAM group policy attachements
   ################################
-  policies = [
-    # Binding a system policy.
-    {
-      policy_names = join(",", ["AliyunVPCFullAccess", "AliyunKafkaFullAccess"])
-      policy_type  = "System"
-    },
-    # When binding custom policy, make sure this policy has been created.
-    {
-      policy_names = alicloud_ram_policy.custom-policy-1.policy_name
-      policy_type  = "Custom"
-    },
-    # Create policy and bind the ram group.
-    {
-      policy_names = join(",", [
-        alicloud_ram_policy.custom-policy-2.policy_name,
-        alicloud_ram_policy.custom-policy-3.policy_name,
-      ])
-    }
+  managed_system_policy_names = [
+    "AliyunVPCFullAccess",
+    "AliyunKafkaFullAccess"
+  ]
+  managed_custom_policy_names = [
+    alicloud_ram_policy.custom-policy-1.policy_name,
+    alicloud_ram_policy.custom-policy-2.policy_name,
+    alicloud_ram_policy.custom-policy-3.policy_name,
   ]
 }
