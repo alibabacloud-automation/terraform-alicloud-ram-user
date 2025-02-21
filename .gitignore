@@ -22,3 +22,5 @@
 **/.terraform/*
 .terraform.lock.hcl
 .terraform.tfstate.lock.info
+
+examples/*/secret.txt

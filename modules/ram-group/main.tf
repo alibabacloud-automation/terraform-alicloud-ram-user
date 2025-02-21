@@ -2,9 +2,9 @@ resource "random_uuid" "this" {
 }
 
 locals {
-  create        = var.existing_group_name != "" ? false : var.create
-  attach_policy = var.existing_group_name != "" || var.create ? true : false
-  group_name    = var.group_name != "" ? var.group_name : substr("ram-group-${replace(random_uuid.this.result, "-", "")}", 0, 32)
+  create        = var.existing_group_name != null ? false : var.create
+  attach_policy = var.existing_group_name != null || var.create ? true : false
+  group_name    = var.group_name != null ? var.group_name : substr("ram-group-${replace(random_uuid.this.result, "-", "")}", 0, 32)
   policy_list = flatten(
     [
       for _, obj in var.policies : [
@@ -15,7 +15,7 @@ locals {
       ]
     ]
   )
-  this_group_name = var.existing_group_name != "" ? var.existing_group_name : concat(alicloud_ram_group.this.*.name, [""])[0]
+  this_group_name = var.existing_group_name != null ? var.existing_group_name : concat(alicloud_ram_group.this.*.name, [""])[0]
 }
 
 ################################
@@ -48,4 +48,20 @@ resource "alicloud_ram_group_policy_attachment" "this" {
   group_name  = local.this_group_name
   policy_name = lookup(local.policy_list[count.index], "policy_name")
   policy_type = lookup(local.policy_list[count.index], "policy_type")
+}
+
+resource "alicloud_ram_group_policy_attachment" "managed_custom" {
+  count = length(var.managed_custom_policy_names) > 0 ? length(var.managed_custom_policy_names) : 0
+
+  group_name  = local.group_name
+  policy_name = element(var.managed_custom_policy_names, count.index)
+  policy_type = "Custom"
+}
+
+resource "alicloud_ram_group_policy_attachment" "managed_system" {
+  count = length(var.managed_system_policy_names) > 0 ? length(var.managed_system_policy_names) : 0
+
+  group_name  = local.group_name
+  policy_name = element(var.managed_system_policy_names, count.index)
+  policy_type = "System"
 }
