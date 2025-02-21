@@ -11,6 +11,7 @@ module "ram_group_with_assumable_roles_policy" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.

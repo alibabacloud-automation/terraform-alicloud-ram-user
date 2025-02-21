@@ -145,6 +145,7 @@ module "ram_user" {
 
 更多provider的使用细节，请移步[How to use provider in the module](https://www.terraform.io/docs/language/modules/develop/providers.html#passing-providers-explicitly)
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |

@@ -11,6 +11,7 @@ module "ram_group_with_policies" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.

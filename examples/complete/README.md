@@ -23,6 +23,7 @@ $ terraform apply -var-file=tfvars/01-update.tfvars
 
 Also, you can add more variables files in the folder `tfvars`.
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.

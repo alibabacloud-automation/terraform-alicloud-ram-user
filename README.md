@@ -188,6 +188,7 @@ and then run `terraform init` and `terraform apply` to make the defined provider
 
 More details see [How to use provider in the module](https://www.terraform.io/docs/language/modules/develop/providers.html#passing-providers-explicitly)
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
