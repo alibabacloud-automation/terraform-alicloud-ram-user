@@ -11,8 +11,6 @@ module "ram_group_with_policies" {
 }
 ```
 
-<!-- 在根目录下运行命令 `terraform-docs markdown . --output-file "./README.md"`，可将所有信息自动填充 -->
-<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.
