@@ -5,7 +5,6 @@
 ```hcl
 module "ram_group_with_assumable_roles_policy" {
     source  = "terraform-alicloud-modules/ram/alicloud//modules/ram-group-with-assumable-roles-policy"
-    version = "~> 1.2"
 
   # omitted...
 }
@@ -14,7 +13,9 @@ module "ram_group_with_assumable_roles_policy" {
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 
 ## Providers
 
@@ -44,8 +45,8 @@ No modules.
 | <a name="input_action"></a> [action](#input\_action) | Operations on specific resources | `string` | `"sts:AssumeRole"` | no |
 | <a name="input_assumable_roles"></a> [assumable\_roles](#input\_assumable\_roles) | List of RAM roles ARNs which can be assumed by the group | `list(string)` | `[]` | no |
 | <a name="input_force"></a> [force](#input\_force) | This parameter is used for resource destroy | `bool` | `false` | no |
-| <a name="input_group_name"></a> [group\_name](#input\_group\_name) | Name of RAM group. If not set, a default name with prefix `group-assumable-roles-` will be returned. | `string` | `""` | no |
-| <a name="input_policy_name"></a> [policy\_name](#input\_policy\_name) | Name of RAM policy, If not set, a default name with prefix `assumable-roles-policy-` will be returned. | `string` | `""` | no |
+| <a name="input_group_name"></a> [group\_name](#input\_group\_name) | Name of RAM group. If not set, a default name with prefix `group-assumable-roles-` will be returned. | `string` | `null` | no |
+| <a name="input_policy_name"></a> [policy\_name](#input\_policy\_name) | Name of RAM policy, If not set, a default name with prefix `assumable-roles-policy-` will be returned. | `string` | `null` | no |
 | <a name="input_user_names"></a> [user\_names](#input\_user\_names) | List of RAM users to have in an RAM group which can assume the role | `list(string)` | `[]` | no |
 
 ## Outputs

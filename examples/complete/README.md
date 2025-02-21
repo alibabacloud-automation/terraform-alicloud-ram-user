@@ -26,13 +26,15 @@ Also, you can add more variables files in the folder `tfvars`.
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | 1.239.0 |
+| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | n/a |
 
 ## Modules
 
@@ -70,8 +72,8 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | <a name="output_group_name"></a> [group\_name](#output\_group\_name) | The name of group |
-| <a name="output_group_policy_name"></a> [group\_policy\_name](#output\_group\_policy\_name) | The name of policy which bind to group |
 | <a name="output_group_user_names"></a> [group\_user\_names](#output\_group\_user\_names) | user name which has be added to group |
+| <a name="output_this_group_policy_name"></a> [this\_group\_policy\_name](#output\_this\_group\_policy\_name) | (Deprecated, works with the deprecated variable 'policies') The name of policy which bind to group |
 | <a name="output_this_user_policy_name"></a> [this\_user\_policy\_name](#output\_this\_user\_policy\_name) | (Deprecated, only works with the deprecated variable 'policies') The name of RAM policy which bind to RAM user |
 | <a name="output_user_id"></a> [user\_id](#output\_user\_id) | The unique ID assigned by alicloud |
 | <a name="output_user_name"></a> [user\_name](#output\_user\_name) | The name of RAM user |

@@ -18,19 +18,21 @@ Run `terraform destroy` when you don't need these resources.
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | 1.239.0 |
+| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ram-group-with-assumable-roles-policy-example"></a> [ram-group-with-assumable-roles-policy-example](#module\_ram-group-with-assumable-roles-policy-example) | ../../modules/ram-group-with-assumable-roles-policy | n/a |
+| <a name="module_example"></a> [example](#module\_example) | ../../modules/ram-group-with-assumable-roles-policy | n/a |
 
 ## Resources
 
@@ -39,7 +41,6 @@ No requirements.
 | [alicloud_ram_role.prepared-role](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/resources/ram_role) | resource |
 | [alicloud_ram_user.prepared-user-1](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/resources/ram_user) | resource |
 | [alicloud_ram_user.prepared-user-2](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/resources/ram_user) | resource |
-| [alicloud_account.this](https://registry.terraform.io/providers/hashicorp/alicloud/latest/docs/data-sources/account) | data source |
 
 ## Inputs
 

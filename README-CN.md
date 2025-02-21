@@ -1,5 +1,9 @@
+Terraform module which create RAM users on Alibaba Cloud.
+
 terraform-alicloud-ram-user 
 ===========================
+
+简体中文 | [English](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/blob/master/README.md)
 
 Terraform模块用于在阿里云上创建RAM用户，同时您可以选择是否创建该用户的`login_profile`和`access_key`并为该用户绑定`policy`。本模块还支持创建RAM组及将用户添加到RAM组中，并为RAM组绑定`policy`等。
 
@@ -45,7 +49,7 @@ module "ram-user-example" {
 }
 ```
 
-创建RAM用户并分配一般访问密钥（Access Key），访问密钥将存储到默认的秘密文件"secret.txt"中。
+创建RAM用户并分配一把访问密钥（Access Key），访问密钥将存储到默认的秘密文件"secret.txt"中。
 
 ```hcl
 module "ram-user-example" {
@@ -55,7 +59,7 @@ module "ram-user-example" {
 }
 ```
 
-创建RAM用户并分配一般访问密钥（Access Key），访问密钥通过指定的PGP公钥加密。
+创建RAM用户并分配一把访问密钥（Access Key），访问密钥通过指定的PGP公钥加密。
 
 ```hcl
 module "ram-user-example" {
@@ -68,18 +72,18 @@ module "ram-user-example" {
 
 ## 模块
 
-* [ram-group](./modules/ram-group)
-* [ram-group-with-assumable-roles-policy](./modules/ram-group-with-assumable-roles-policy)
+* [ram-group](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group)
+* [ram-group-with-assumable-roles-policy](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/modules/ram-group-with-assumable-roles-policy)
 
 
 ## 示例
 
-* [basic](./examples/basic)
-* [complete](./examples/complete)
-* [complete-new](./examples/complete-new)
-* [ram-group](./examples/ram-group)
-* [ram-group-new](./examples/ram-group-new)
-* [ram-group-with-assumable-roles-policy](./examples/ram-group-with-assumable-roles-policy)
+* [basic](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/basic)
+* [complete](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete)
+* [complete-new](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete-new)
+* [ram-group](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group)
+* [ram-group-new](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group-new)
+* [ram-group-with-assumable-roles-policy](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group-with-assumable-roles-policy)
 
 
 ## 注意事项
@@ -180,30 +184,26 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_comments"></a> [comments](#input\_comments) | Comment of the RAM user. This parameter can have a string of 1 to 128 characters. | `string` | `""` | no |
+| <a name="input_comments"></a> [comments](#input\_comments) | Comment of the RAM user. This parameter can have a string of 1 to 128 characters. | `string` | `null` | no |
 | <a name="input_create"></a> [create](#input\_create) | Whether to create ram user. | `bool` | `true` | no |
 | <a name="input_create_ram_access_key"></a> [create\_ram\_access\_key](#input\_create\_ram\_access\_key) | Whether to create ram access key. Default value is 'false'. | `bool` | `false` | no |
 | <a name="input_create_ram_user_login_profile"></a> [create\_ram\_user\_login\_profile](#input\_create\_ram\_user\_login\_profile) | Whether to create ram user login profile | `bool` | `false` | no |
 | <a name="input_create_user_attachment"></a> [create\_user\_attachment](#input\_create\_user\_attachment) | (Deprecated, works with the deprecated variable 'policies') Whether to attach RAM policy to RAM user. Default value is 'false'. | `bool` | `false` | no |
-| <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Name of the RAM user which for display | `string` | `""` | no |
-| <a name="input_email"></a> [email](#input\_email) | Email of the RAM user. | `string` | `""` | no |
-| <a name="input_existing_user_name"></a> [existing\_user\_name](#input\_existing\_user\_name) | (Deprecated) The name of an existing RAM group. If set, 'create' will be ignored. | `string` | `""` | no |
+| <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Name of the RAM user which for display | `string` | `null` | no |
+| <a name="input_email"></a> [email](#input\_email) | Email of the RAM user. | `string` | `null` | no |
+| <a name="input_existing_user_name"></a> [existing\_user\_name](#input\_existing\_user\_name) | (Deprecated) The name of an existing RAM group. If set, 'create' will be ignored. | `string` | `null` | no |
 | <a name="input_force_destroy_user"></a> [force\_destroy\_user](#input\_force\_destroy\_user) | When destroying this user, destroy even if it has non-Terraform-managed ram access keys, login profile or MFA devices. Without force\_destroy a user with non-Terraform-managed access keys and login profile will fail to be destroyed. | `bool` | `false` | no |
 | <a name="input_managed_custom_policy_names"></a> [managed\_custom\_policy\_names](#input\_managed\_custom\_policy\_names) | List of names of managed policies of Custom type to attach to RAM user | `list(string)` | `[]` | no |
 | <a name="input_managed_system_policy_names"></a> [managed\_system\_policy\_names](#input\_managed\_system\_policy\_names) | List of names of managed policies of System type to attach to RAM user | `list(string)` | `[]` | no |
 | <a name="input_mfa_bind_required"></a> [mfa\_bind\_required](#input\_mfa\_bind\_required) | This parameter indicates whether the MFA needs to be bind when the user first logs in. Default value is 'false'. | `bool` | `false` | no |
-| <a name="input_mobile"></a> [mobile](#input\_mobile) | Phone number of the RAM user. This number must contain an international area code prefix, just look like this: 86-18600008888. | `string` | `""` | no |
-| <a name="input_password"></a> [password](#input\_password) | Login password of the user | `string` | `""` | no |
+| <a name="input_mobile"></a> [mobile](#input\_mobile) | Phone number of the RAM user. This number must contain an international area code prefix, just look like this: 86-18600008888. | `string` | `null` | no |
+| <a name="input_password"></a> [password](#input\_password) | Login password of the user | `string` | `null` | no |
 | <a name="input_password_reset_required"></a> [password\_reset\_required](#input\_password\_reset\_required) | This parameter indicates whether the password needs to be reset when the user first logs in. Default value is 'false'. | `bool` | `false` | no |
-| <a name="input_pgp_key"></a> [pgp\_key](#input\_pgp\_key) | Either a base-64 encoded PGP public key, or a keybase username in the form | `string` | `""` | no |
+| <a name="input_pgp_key"></a> [pgp\_key](#input\_pgp\_key) | Either a base-64 encoded PGP public key, or a keybase username in the form | `string` | `null` | no |
 | <a name="input_policies"></a> [policies](#input\_policies) | (Deprecated, use 'managed\_custom\_policy\_names' and 'managed\_system\_policy\_names') List of the policies that binds the user. Each item can contains keys: 'policy\_name'(the name of policy that used to bind the user), 'policy\_type'(the type of ram policies, System or Custom, default to Custom.). | `list(map(string))` | `[]` | no |
-| <a name="input_profile"></a> [profile](#input\_profile) | (Deprecated from version 1.1.0) The profile name as set in the shared credentials file. If not set, it will be sourced from the ALICLOUD\_PROFILE environment variable. | `string` | `""` | no |
-| <a name="input_region"></a> [region](#input\_region) | (Deprecated from version 1.1.0) The region used to launch this module resources. | `string` | `""` | no |
-| <a name="input_secret_file"></a> [secret\_file](#input\_secret\_file) | A file used to store access key and secret key of ther user. | `string` | `""` | no |
-| <a name="input_shared_credentials_file"></a> [shared\_credentials\_file](#input\_shared\_credentials\_file) | (Deprecated from version 1.1.0) This is the path to the shared credentials file. If this is not set and a profile is specified, $HOME/.aliyun/config.json will be used. | `string` | `""` | no |
-| <a name="input_skip_region_validation"></a> [skip\_region\_validation](#input\_skip\_region\_validation) | (Deprecated from version 1.1.0) Skip static validation of region ID. Used by users of alternative AlibabaCloud-like APIs or users w/ access to regions that are not public (yet). | `bool` | `false` | no |
+| <a name="input_secret_file"></a> [secret\_file](#input\_secret\_file) | A file used to store access key and secret key of ther user. | `string` | `null` | no |
 | <a name="input_status"></a> [status](#input\_status) | Status of access key | `string` | `"Active"` | no |
-| <a name="input_user_name"></a> [user\_name](#input\_user\_name) | Desired name for the ram user. If not set, a default name with prefix 'ram-user-' will be returned. | `string` | `""` | no |
+| <a name="input_user_name"></a> [user\_name](#input\_user\_name) | Desired name for the ram user. If not set, a default name with prefix 'ram-user-' will be returned. | `string` | `null` | no |
 
 ## Outputs
 

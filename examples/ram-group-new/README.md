@@ -18,19 +18,21 @@ Run `terraform destroy` when you don't need these resources.
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | 1.239.0 |
+| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ram-group"></a> [ram-group](#module\_ram-group) | ../../modules/ram-group | n/a |
+| <a name="module_example"></a> [example](#module\_example) | ../../modules/ram-group | n/a |
 
 ## Resources
 
@@ -50,6 +52,6 @@ No inputs.
 | Name | Description |
 |------|-------------|
 | <a name="output_group_name"></a> [group\_name](#output\_group\_name) | The name of group |
-| <a name="output_group_policy_name"></a> [group\_policy\_name](#output\_group\_policy\_name) | The name of policy which bind to group |
 | <a name="output_group_user_names"></a> [group\_user\_names](#output\_group\_user\_names) | User name which has be added to group |
+| <a name="output_this_group_policy_name"></a> [this\_group\_policy\_name](#output\_this\_group\_policy\_name) | (Deprecated, works with the deprecated variable 'policies') The name of policy which bind to group |
 <!-- END_TF_DOCS -->

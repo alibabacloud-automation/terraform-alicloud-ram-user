@@ -5,7 +5,6 @@
 ```hcl
 module "ram_group_with_policies" {
     source  = "terraform-alicloud-modules/ram-user/alicloud//modules/ram-group-with-policies"
-    version = "~> 1.2"
 
   # omitted...
 }
@@ -14,7 +13,9 @@ module "ram_group_with_policies" {
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 
 ## Providers
 
@@ -42,19 +43,14 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_comments"></a> [comments](#input\_comments) | Comment of the RAM group. This parameter can have a string of 1 to 128 characters. | `string` | `""` | no |
+| <a name="input_comments"></a> [comments](#input\_comments) | Comment of the RAM group. This parameter can have a string of 1 to 128 characters. | `string` | `"this group was created by terrafom module ram-user/modules/ram-group."` | no |
 | <a name="input_create"></a> [create](#input\_create) | Whether to create RAM group. | `bool` | `true` | no |
-| <a name="input_create_group_attachment"></a> [create\_group\_attachment](#input\_create\_group\_attachment) | (Deprecated, works with the deprecated variable 'policies') Whether to attach RAM policy to RAM group | `bool` | `false` | no |
-| <a name="input_existing_group_name"></a> [existing\_group\_name](#input\_existing\_group\_name) | (Deprecated) The name of an existing RAM group. If set, 'create' will be ignored. | `string` | `""` | no |
+| <a name="input_existing_group_name"></a> [existing\_group\_name](#input\_existing\_group\_name) | (Deprecated) The name of an existing RAM group. If set, 'create' will be ignored. | `string` | `null` | no |
 | <a name="input_force_destroy_group"></a> [force\_destroy\_group](#input\_force\_destroy\_group) | This parameter is used for resource destroy. | `bool` | `false` | no |
-| <a name="input_group_name"></a> [group\_name](#input\_group\_name) | Name of the RAM group. If not set, a default name with prefix 'ram-group-' will be returned. | `string` | `""` | no |
+| <a name="input_group_name"></a> [group\_name](#input\_group\_name) | Name of the RAM group. If not set, a default name with prefix 'ram-group-' will be returned. | `string` | `null` | no |
 | <a name="input_managed_custom_policy_names"></a> [managed\_custom\_policy\_names](#input\_managed\_custom\_policy\_names) | List of names of managed policies of Custom type to attach to RAM group | `list(string)` | `[]` | no |
 | <a name="input_managed_system_policy_names"></a> [managed\_system\_policy\_names](#input\_managed\_system\_policy\_names) | List of names of managed policies of System type to attach to RAM group | `list(string)` | `[]` | no |
 | <a name="input_policies"></a> [policies](#input\_policies) | (Deprecated, use 'managed\_custom\_policy\_names' and 'managed\_system\_policy\_names') List of the policies that binds the role. Each item can contains keys: 'policy\_name'(the name of policy that used to bind the role), 'policy\_type'(the type of ram policies, System or Custom, default to Custom.). | `list(map(string))` | `[]` | no |
-| <a name="input_profile"></a> [profile](#input\_profile) | (Deprecated from version 1.2.0) The profile name as set in the shared credentials file. If not set, it will be sourced from the ALICLOUD\_PROFILE environment variable. | `string` | `""` | no |
-| <a name="input_region"></a> [region](#input\_region) | (Deprecated from version 1.2.0) The region used to launch this module resources. | `string` | `""` | no |
-| <a name="input_shared_credentials_file"></a> [shared\_credentials\_file](#input\_shared\_credentials\_file) | (Deprecated from version 1.2.0) This is the path to the shared credentials file. If this is not set and a profile is specified, $HOME/.aliyun/config.json will be used. | `string` | `""` | no |
-| <a name="input_skip_region_validation"></a> [skip\_region\_validation](#input\_skip\_region\_validation) | (Deprecated from version 1.2.0) Skip static validation of region ID. Used by users of alternative AlibabaCloud-like APIs or users w/ access to regions that are not public (yet). | `bool` | `false` | no |
 | <a name="input_user_names"></a> [user\_names](#input\_user\_names) | List of user name which will be added to group | `list(string)` | `[]` | no |
 
 ## Outputs
