@@ -80,9 +80,7 @@ module "ram-user-example" {
 
 * [basic](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/basic)
 * [complete](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete)
-* [complete-new](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/complete-new)
 * [ram-group](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group)
-* [ram-group-new](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group-new)
 * [ram-group-with-assumable-roles-policy](https://github.com/terraform-alicloud-modules/terraform-alicloud-ram-user/tree/master/examples/ram-group-with-assumable-roles-policy)
 
 
