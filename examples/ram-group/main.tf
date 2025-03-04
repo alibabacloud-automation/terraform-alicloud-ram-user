@@ -1,62 +1,91 @@
-resource "alicloud_ram_user" "default" {
-  count = 2
-  name  = "user-${count.index + 1}"
+locals {
+  resource_name_prefix = "tfmod-ram-user-ram-group-new"
 }
 
-module "ram-group" {
+resource "random_integer" "default" {
+  min = 0
+  max = 99999
+}
+
+resource "alicloud_ram_user" "default" {
+  count = 2
+  name  = "${local.resource_name_prefix}-user-${random_integer.default.result}-${count.index + 1}"
+}
+
+resource "alicloud_ram_policy" "custom-policy-1" {
+  policy_name     = "${local.resource_name_prefix}-custom-policy-1"
+  policy_document = <<EOF
+	{
+		"Version": "1",
+		"Statement": [
+		  {
+			"Action": "mns:*",
+			"Resource": "*",
+			"Effect": "Allow"
+		  }
+		]
+	  }
+	EOF
+}
+
+resource "alicloud_ram_policy" "custom-policy-2" {
+  policy_name     = "${local.resource_name_prefix}-custom-policy-2"
+  policy_document = <<EOF
+	{
+		"Version": "1",
+		"Statement": [
+		  {
+			"Action": "ots:*",
+			"Resource": "*",
+			"Effect": "Allow"
+		  }
+		]
+	  }
+	EOF
+}
+
+resource "alicloud_ram_policy" "custom-policy-3" {
+  policy_name     = "${local.resource_name_prefix}-custom-policy-3"
+  policy_document = <<EOF
+	{
+		"Version": "1",
+		"Statement": [
+		  {
+			"Action": "ots:*",
+			"Resource": "*",
+			"Effect": "Allow"
+		  }
+		]
+	  }
+	EOF
+}
+
+
+module "example" {
   source = "../../modules/ram-group"
 
   ################################
   # RAM group
   ################################
-  group_name = "test-ram-group"
+  group_name = "${local.resource_name_prefix}-example-group"
   comments   = "this is a test ram group"
 
   ################################
   # RAM group membership
   ################################
   # before joining the RAM group, make sure the RAM user has been created.
-  user_names = alicloud_ram_user.default.*.name
+  user_names = alicloud_ram_user.default[*].name
 
   ################################
   # RAM group policy attachements
   ################################
-  create_group_attachment = true
-  policies = [
-    # Binding a system policy.
-    {
-      policy_names = join(",", ["AliyunVPCFullAccess", "AliyunKafkaFullAccess"])
-      policy_type  = "System"
-    },
-    # When binding custom policy, make sure this policy has been created.
-    {
-      policy_names = "VpcListTagResources"
-      policy_type  = "Custom"
-    },
-    # Create policy and bind the ram group.
-    {
-      policy_names = join(",", ["manage-slb-and-eip-resource", "manage-ecs-vpc-and-vswitch-resource"])
-    }
+  managed_system_policy_names = [
+    "AliyunVPCFullAccess",
+    "AliyunKafkaFullAccess"
   ]
-  depends_on = [module.ram_policy]
-}
-
-module "ram_policy" {
-  source = "terraform-alicloud-modules/ram-policy/alicloud"
-  policies = [
-    {
-      name            = "manage-slb-and-eip-resource"
-      defined_actions = join(",", ["slb-all", "vpc-all", "vswitch-all"])
-      actions         = join(",", ["vpc:AssociateEipAddress", "vpc:UnassociateEipAddress"])
-      resources       = join(",", ["acs:vpc:*:*:eip/eip-12345", "acs:slb:*:*:*"])
-    },
-    {
-      #actions is the action of custom specific resource.
-      #resources is the specific object authorized to customize.
-      name      = "manage-ecs-vpc-and-vswitch-resource"
-      actions   = join(",", ["ecs:ModifyInstanceAttribute", "vpc:ModifyVpc", "vswitch:ModifyVSwitch"])
-      resources = join(",", ["acs:ecs:*:*:instance/i-001", "acs:vpc:*:*:vpc/v-001", "acs:vpc:*:*:vswitch/vsw-001"])
-      effect    = "Deny"
-    }
+  managed_custom_policy_names = [
+    alicloud_ram_policy.custom-policy-1.policy_name,
+    alicloud_ram_policy.custom-policy-2.policy_name,
+    alicloud_ram_policy.custom-policy-3.policy_name,
   ]
 }
