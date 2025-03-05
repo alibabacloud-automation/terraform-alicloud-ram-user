@@ -1,4 +1,9 @@
-## 1.3.0 (Unreleased)
+## 2.1.0 (Unreleased)
+## 2.0.0 (March 5, 2025)
+
+- Update README [GH-11](https://github.com/alibabacloud-automation/terraform-alicloud-ram-user/pull/11)
+- all modules and sub-modules: support new variables and outputs [GH-9](https://github.com/alibabacloud-automation/terraform-alicloud-ram-user/pull/9)
+
 ## 1.2.1 (April 8, 2024)
 
 - improve the README
