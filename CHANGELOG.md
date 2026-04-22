@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/alibabacloud-automation/terraform-alicloud-ram-user/compare/v2.0.0...v3.0.0) (2026-04-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* add provider version constraint for aliyun/alicloud
+
+### Features
+
+* add provider version constraint for aliyun/alicloud ([4552537](https://github.com/alibabacloud-automation/terraform-alicloud-ram-user/commit/4552537a1dc4d5c6cce037993f16e7c9a7605c14))
+
 ## 2.1.0 (Unreleased)
 ## 2.0.0 (March 5, 2025)
 
